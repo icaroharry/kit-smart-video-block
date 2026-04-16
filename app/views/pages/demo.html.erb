@@ -1,0 +1,144 @@
+<% content_for(:title, "Demo - Smart Video Block") %>
+
+<div class="max-w-6xl mx-auto px-6 py-10">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold">Try it out</h1>
+    <p class="text-gray-600 mt-1">Paste a YouTube URL and see the generated email block in real time.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-8">
+    <!-- Config Panel (left side - mimics Kit's sidebar) -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-xl border border-gray-200 p-6 sticky top-6" data-controller="demo">
+        <div class="flex items-center gap-2 mb-6">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          <h2 class="font-semibold">Smart Video Block</h2>
+        </div>
+
+        <%= form_with url: demo_generate_path, method: :post, data: { turbo_stream: true, demo_target: "form" } do |f| %>
+          <!-- YouTube URL -->
+          <div class="mb-5">
+            <label for="youtube_url" class="block text-sm font-medium text-gray-700 mb-1">YouTube Video URL</label>
+            <input
+              type="url"
+              name="youtube_url"
+              id="youtube_url"
+              placeholder="https://youtube.com/watch?v=..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              data-demo-target="urlInput"
+              required
+            />
+            <p class="text-xs text-gray-500 mt-1">Supports youtube.com and youtu.be links</p>
+          </div>
+
+          <!-- Tone -->
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Tone</label>
+            <div class="space-y-2">
+              <% [["casual", "Casual"], ["professional", "Professional"], ["storytelling", "Storytelling"]].each do |value, label| %>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input type="radio" name="tone" value="<%= value %>" <%= "checked" if value == "casual" %>
+                    class="w-4 h-4 text-indigo-600 focus:ring-indigo-500" />
+                  <span class="text-sm text-gray-700"><%= label %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Format -->
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Format</label>
+            <div class="space-y-2">
+              <% [["takeaways", "3 Key Takeaways"], ["teaser", "Teaser Hook"], ["summary", "Full Summary"]].each do |value, label| %>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input type="radio" name="format" value="<%= value %>" <%= "checked" if value == "takeaways" %>
+                    class="w-4 h-4 text-indigo-600 focus:ring-indigo-500" />
+                  <span class="text-sm text-gray-700"><%= label %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- CTA Text -->
+          <div class="mb-6">
+            <label for="cta_text" class="block text-sm font-medium text-gray-700 mb-1">Button Text</label>
+            <input
+              type="text"
+              name="cta_text"
+              id="cta_text"
+              value="Watch the full video"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <!-- Generate Button -->
+          <button
+            type="submit"
+            class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+            data-demo-target="submitBtn"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <span data-demo-target="btnText">Generate</span>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Email Preview (right side - mimics Kit's email editor) -->
+    <div class="lg:col-span-3">
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <!-- Editor toolbar mock -->
+        <div class="border-b border-gray-200 bg-gray-50 px-4 py-2 flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs text-gray-500">
+            <span class="w-3 h-3 rounded-full bg-red-400"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+            <span class="w-3 h-3 rounded-full bg-green-400"></span>
+            <span class="ml-2 font-medium">Kit Email Editor</span>
+          </div>
+          <button
+            id="copy-html-btn"
+            class="hidden text-xs text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+            data-controller="clipboard"
+            data-action="clipboard#copy"
+          >
+            Copy HTML
+          </button>
+        </div>
+
+        <!-- Email body -->
+        <div class="p-6 min-h-[500px]">
+          <!-- Static email content above -->
+          <div class="mb-6 text-gray-500 text-sm leading-relaxed">
+            <p class="mb-3">Hey friends,</p>
+            <p class="mb-3">I just dropped a new video and wanted to share the key points with you...</p>
+          </div>
+
+          <!-- Dynamic preview area -->
+          <div id="email-preview">
+            <div class="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-gray-300 mb-3">
+                <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+              </svg>
+              <p class="text-gray-400 text-sm">Your generated video block will appear here</p>
+              <p class="text-gray-300 text-xs mt-1">Paste a YouTube URL and click Generate</p>
+            </div>
+          </div>
+
+          <!-- Static email content below -->
+          <div class="mt-6 text-gray-500 text-sm leading-relaxed">
+            <p class="mb-3">Talk soon,</p>
+            <p>Creator Name</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

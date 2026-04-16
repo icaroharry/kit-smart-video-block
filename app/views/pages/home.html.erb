@@ -1,0 +1,135 @@
+<% content_for(:title, "Smart Video Block - AI-Powered Kit Plugin") %>
+
+<div class="max-w-5xl mx-auto px-6">
+  <!-- Hero -->
+  <div class="py-20 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-sm font-medium mb-6">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+        <path d="M2 17l10 5 10-5"></path>
+        <path d="M2 12l10 5 10-5"></path>
+      </svg>
+      Kit App Store Plugin
+    </div>
+
+    <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight mb-6">
+      Turn YouTube videos into<br>
+      <span class="text-indigo-600">newsletter-ready email blocks</span>
+    </h1>
+
+    <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
+      A content block plugin for Kit's email editor. Paste a YouTube URL, pick a tone,
+      and get an AI-generated summary block with thumbnail, key takeaways, and a CTA button.
+      Ready to drop into your next email.
+    </p>
+
+    <div class="flex items-center justify-center gap-4">
+      <a href="/demo" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
+        Try the demo
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="py-16 border-t border-gray-200">
+    <h2 class="text-2xl font-bold text-center mb-12">How it works</h2>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-indigo-100 flex items-center justify-center">
+          <span class="text-indigo-600 font-bold">1</span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Paste a YouTube URL</h3>
+        <p class="text-gray-600 text-sm">
+          Drop any YouTube video link into the plugin config panel inside Kit's email editor.
+        </p>
+      </div>
+
+      <div class="text-center">
+        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-indigo-100 flex items-center justify-center">
+          <span class="text-indigo-600 font-bold">2</span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Pick your style</h3>
+        <p class="text-gray-600 text-sm">
+          Choose a tone (casual, professional, storytelling) and format (takeaways, teaser, or summary).
+        </p>
+      </div>
+
+      <div class="text-center">
+        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-indigo-100 flex items-center justify-center">
+          <span class="text-indigo-600 font-bold">3</span>
+        </div>
+        <h3 class="font-semibold text-lg mb-2">Get your email block</h3>
+        <p class="text-gray-600 text-sm">
+          AI generates a polished email section with thumbnail, content, and CTA. Inline-styled and email-client safe.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kit Plugin Spec -->
+  <div class="py-16 border-t border-gray-200">
+    <h2 class="text-2xl font-bold text-center mb-4">Built for Kit's plugin system</h2>
+    <p class="text-gray-600 text-center max-w-xl mx-auto mb-12">
+      This plugin follows Kit's content block specification. It registers as an app
+      in the Kit App Store and appears in the email editor's block menu.
+    </p>
+
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 class="font-semibold text-sm text-gray-500 uppercase tracking-wide mb-3">Plugin Endpoint</h3>
+        <code class="block text-sm bg-gray-50 rounded-lg p-4 text-gray-800 mb-3">
+          POST /api/plugin/render
+        </code>
+        <p class="text-sm text-gray-600">
+          Kit sends the creator's settings, the server returns email-safe HTML. No scripts, no iframes, all inline styles.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 class="font-semibold text-sm text-gray-500 uppercase tracking-wide mb-3">Settings UI</h3>
+        <div class="space-y-2 text-sm text-gray-600">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
+            <span><strong>text</strong> input for YouTube URL</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
+            <span><strong>radioGroup</strong> for tone selection</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
+            <span><strong>radioGroup</strong> for format selection</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
+            <span><strong>text</strong> input for CTA button text</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="py-16 border-t border-gray-200">
+    <h2 class="text-2xl font-bold text-center mb-12">Tech stack</h2>
+
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <% ["Ruby on Rails 8", "Hotwire / Turbo", "Tailwind CSS", "Gemini AI", "Kit Plugin API"].each do |tech| %>
+        <span class="px-4 py-2 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700">
+          <%= tech %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-10 border-t border-gray-200 text-center text-sm text-gray-500">
+    Built by <a href="https://icaro.io" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">Icaro Harry</a>
+    as a Kit App Store plugin prototype.
+  </footer>
+</div>

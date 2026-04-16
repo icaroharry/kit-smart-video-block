@@ -1,0 +1,9 @@
+<%= turbo_frame_tag "email-preview" do %>
+  <div id="generated-html" class="hidden"><%= html %></div>
+  <div>
+    <%= raw html %>
+  </div>
+  <script>
+    document.getElementById('copy-html-btn').classList.remove('hidden');
+  </script>
+<% end %>

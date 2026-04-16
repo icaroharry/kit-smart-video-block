@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "Smart Video Block for Kit" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="AI-powered content block plugin for Kit. Turn any YouTube video into a newsletter-ready email section.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-50 text-gray-900 antialiased">
+    <nav class="border-b border-gray-200 bg-white">
+      <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 text-lg font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+          Smart Video Block
+        </a>
+        <div class="flex items-center gap-6 text-sm">
+          <a href="/" class="text-gray-600 hover:text-gray-900 transition-colors">Home</a>
+          <a href="/demo" class="text-gray-600 hover:text-gray-900 transition-colors">Demo</a>
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-medium">
+            for Kit
+          </span>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <%= yield %>
+    </main>
+  </body>
+</html>
