@@ -22,7 +22,7 @@ I built this as part of my application for the **Senior Software Engineer, Creat
 
 It's also an example of how I work: I used **Claude Code** to research Kit's developer platform, design the architecture, and build, debug, and ship the entire app — front-end, back-end, deployment, custom domain, and security hardening — in a single focused session. The full conversation is reproducible from the commit history.
 
-The Smart Video Block solves a real workflow for Kit creators (turn YouTube videos into newsletter blocks), but more importantly it shows how I get up to speed on an unfamiliar platform fast and ship working software end to end. Along the way I found and reported real bugs in Kit's plugin API (radioGroup type returning 422, generic error messages), which is part of the story too.
+The Smart Video Block solves a real workflow for Kit creators (turn YouTube videos into newsletter blocks), but more importantly it shows how I get up to speed on an unfamiliar platform fast and ship working software end to end.
 
 ## Tech stack
 
