@@ -1,4 +1,7 @@
 class DemoController < ApplicationController
+  # Rate limit: 1 request per 10 seconds per IP.
+  rate_limit to: 1, within: 10.seconds, with: -> { render_rate_limit }
+
   def generate
     youtube_url = params[:youtube_url]
 
@@ -22,6 +25,16 @@ class DemoController < ApplicationController
       "email-preview",
       partial: "demo/error",
       locals: { message: e.message }
+    )
+  end
+
+  private
+
+  def render_rate_limit
+    render turbo_stream: turbo_stream.replace(
+      "email-preview",
+      partial: "demo/error",
+      locals: { message: "Rate limit exceeded. Please wait 10 seconds between requests." }
     )
   end
 end

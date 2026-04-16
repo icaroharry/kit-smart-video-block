@@ -16,11 +16,10 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
-# HTTP client for YouTube API calls
+# HTTP client for YouTube API calls + Gemini REST API
 gem "httparty"
-# XML parser (no longer bundled in Ruby 3.3+)
-gem "rexml"
-# Gemini AI via REST API (using HTTParty)
+# CORS middleware for restricting cross-origin requests
+gem "rack-cors"
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

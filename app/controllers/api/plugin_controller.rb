@@ -2,6 +2,10 @@ module Api
   class PluginController < ApplicationController
     skip_forgery_protection
 
+    # Rate limit: 1 request per 10 seconds per IP.
+    # Protects against abuse if the public endpoint is discovered.
+    rate_limit to: 1, within: 10.seconds, with: -> { render_rate_limit }
+
     def render_block
       settings = params[:settings] || {}
 
@@ -24,6 +28,15 @@ module Api
       render json: { code: 200, html: result[:html] }
     rescue => e
       render json: { code: 500, errors: [ e.message ] }, status: :internal_server_error
+    end
+
+    private
+
+    def render_rate_limit
+      render json: {
+        code: 429,
+        errors: [ "Rate limit exceeded. Please wait 10 seconds between requests." ]
+      }, status: :too_many_requests
     end
   end
 end
