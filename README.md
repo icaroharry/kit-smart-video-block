@@ -1,8 +1,8 @@
 # Smart Video Block — Kit App Store Plugin
 
-An AI-powered content block plugin for [Kit](https://kit.com) (formerly ConvertKit). Paste a YouTube URL in Kit's email editor and generate a newsletter-ready email section with thumbnail, AI-generated takeaways, and a CTA button.
+An AI-powered content block plugin for [Kit](https://kit.com) (formerly ConvertKit). Paste a YouTube URL in Kit's email editor and get a newsletter-ready email section back: thumbnail, AI-generated takeaways, and a CTA button. No extra config.
 
-Built as a prototype to demonstrate a Kit App Store plugin using Kit's actual backend stack (Ruby on Rails, Hotwire, Tailwind) + Google Gemini for AI content generation.
+**Live demo:** https://kit.icaro.io/demo
 
 ## What it does
 
@@ -12,16 +12,25 @@ Creators using Kit often repurpose their YouTube videos into newsletter content.
 
 1. Add the Smart Video Block
 2. Paste a YouTube URL
-3. Pick a tone (casual, professional, storytelling) and format (takeaways, teaser, summary)
-4. Get a rendered email block with thumbnail, AI-generated copy, and CTA button
+3. Get a polished email block — thumbnail, AI-generated takeaways, and a CTA button
+
+That's it. The AI picks the best framing for the video and writes the copy. No tone or format settings — the plugin keeps the surface as small as possible.
+
+## Why this exists
+
+I built this as part of my application for the **Senior Software Engineer, Creator Growth and Monetization** role at Kit, on the Network Squad.
+
+It's also an example of how I work: I used **Claude Code** to research Kit's developer platform, design the architecture, and build, debug, and ship the entire app — front-end, back-end, deployment, custom domain, and security hardening — in a single focused session. The full conversation is reproducible from the commit history.
+
+The Smart Video Block solves a real workflow for Kit creators (turn YouTube videos into newsletter blocks), but more importantly it shows how I get up to speed on an unfamiliar platform fast and ship working software end to end. Along the way I found and reported real bugs in Kit's plugin API (radioGroup type returning 422, generic error messages), which is part of the story too.
 
 ## Tech stack
 
-- **Ruby 3.3** + **Rails 8** — matches Kit's backend stack
+- **Ruby 3.3** + **Rails 8** — matches Kit's actual backend stack
 - **Hotwire** (Turbo + Stimulus) — for the async demo page
 - **Tailwind CSS v4** — Kit's frontend framework
-- **Google Gemini** (`gemini-2.5-flash` with fallback to `gemini-2.5-flash-lite`) — AI content generation
-- **YouTube oEmbed + direct transcript extraction** — no YouTube API key required
+- **Google Gemini** (`gemini-2.5-flash` with fallback to `gemini-2.5-flash-lite`) — direct YouTube video understanding via `fileData.fileUri`
+- **No YouTube API key needed** — Gemini fetches the video directly, no transcript scraping
 
 ## Architecture
 
@@ -31,19 +40,21 @@ kit-plugin/
 │   ├── controllers/
 │   │   ├── api/plugin_controller.rb      # POST /api/plugin/render (Kit spec)
 │   │   ├── demo_controller.rb            # POST /demo/generate (Turbo Stream)
-│   │   └── pages_controller.rb           # Landing + demo pages
+│   │   ├── pages_controller.rb           # Landing + demo pages
+│   │   └── application_controller.rb     # client_ip helper for rate limiting
 │   ├── services/
 │   │   ├── video_summary_service.rb      # Orchestrator
-│   │   ├── gemini_service.rb             # Gemini REST API client
+│   │   ├── gemini_service.rb             # Gemini REST API client (with model fallback)
 │   │   ├── email_html_builder.rb         # Email-safe HTML generation
 │   │   └── youtube/
 │   │       ├── metadata_service.rb       # oEmbed metadata
-│   │       ├── transcript_service.rb     # Direct transcript extraction
 │   │       └── url_parser.rb             # URL → video ID
 │   ├── views/
 │   │   ├── pages/                        # Landing + demo
 │   │   └── demo/                         # Turbo Stream partials
 │   └── javascript/controllers/           # Stimulus controllers
+├── config/
+│   └── initializers/cors.rb              # CORS allowlist (kit.com, *.icaro.io, etc)
 └── public/
     └── plugin-settings.json              # Kit plugin settings schema
 ```
@@ -56,10 +67,7 @@ kit-plugin/
 ```json
 {
   "settings": {
-    "youtube_url": "https://youtube.com/watch?v=...",
-    "tone": "casual",
-    "format": "takeaways",
-    "cta_text": "Watch the full video"
+    "youtube_url": "https://youtube.com/watch?v=..."
   }
 }
 ```
@@ -72,19 +80,23 @@ kit-plugin/
 }
 ```
 
-**Error:**
-```json
-{
-  "code": 422,
-  "errors": ["YouTube URL is required"]
-}
-```
+**Errors:**
+- `422` — missing or invalid YouTube URL
+- `429` — rate limit exceeded (1 request per 10s per IP)
+- `500` — Gemini or YouTube fetch failed
 
 All HTML returned follows Kit's email-safe constraints: inline styles only, no scripts, no iframes, no forms, no external CSS. Links use `target="_blank" rel="noopener noreferrer"`.
 
 ## Plugin Settings Schema
 
 See [`public/plugin-settings.json`](public/plugin-settings.json) for the exact JSON to paste into Kit's developer portal when registering the plugin.
+
+## Production hardening
+
+- **Rate limit**: 1 request per 10 seconds per IP, keyed by `CF-Connecting-IP` to see past Railway's Cloudflare proxy
+- **CORS**: only `kit.com`, `app.kit.com`, `creatornetwork.kit.com`, `*.icaro.io`, `*.up.railway.app`, and localhost
+- **API key safety**: Gemini key only in env vars, never in code or git history
+- **Force SSL** in production (`config.force_ssl = true`)
 
 ## Local development
 
@@ -111,53 +123,38 @@ Get a free Gemini API key at [aistudio.google.com](https://aistudio.google.com).
 ## Testing the plugin endpoint
 
 ```bash
-curl -X POST http://localhost:3333/api/plugin/render \
+curl -X POST https://kit.icaro.io/api/plugin/render \
   -H 'Content-Type: application/json' \
   -d '{
     "settings": {
-      "youtube_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "tone": "casual",
-      "format": "takeaways",
-      "cta_text": "Watch now"
+      "youtube_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     }
   }'
 ```
 
 ## Deployment
 
-Works on any Rails-compatible host. The only requirements:
+Works on any Rails-compatible host. Required:
 
 1. Ruby 3.3+
 2. `GEMINI_API_KEY` environment variable
-3. HTTPS endpoint reachable by Kit
+3. `RAILS_MASTER_KEY` environment variable (for credentials)
+4. HTTPS endpoint reachable by Kit
 
-### Railway setup
-
-1. Push this repo to GitHub
-2. Create a new Railway project → Deploy from GitHub repo
-3. Add environment variable: `GEMINI_API_KEY`
-4. Railway auto-detects Rails and deploys
+This app is deployed on **Railway** with the custom domain `kit.icaro.io`. Railway auto-detects Rails, sets `PORT`, handles SSL via Let's Encrypt.
 
 ## Integrating with Kit
 
 Once deployed to a public HTTPS URL:
 
-1. Register a developer account at [developers.kit.com](https://developers.kit.com)
-2. Create a new App
-3. Add a **Content Block Plugin** with:
-   - **HTML URL:** `https://your-domain.com/api/plugin/render`
-   - **Settings schema:** contents of `public/plugin-settings.json`
-4. Test in your own Kit account (developer mode)
-5. Submit for App Store review
-
-## Why this exists
-
-Built as a portfolio project targeting Kit's Senior Software Engineer role on the Network Squad. Chose this specific plugin because:
-
-- **AI is a gap** — Kit has zero AI-powered apps in their store yet
-- **YouTube is Kit's core audience** — many Kit creators are YouTubers
-- **Content Block plugins are the most visible** plugin type (they render inline in the editor)
-- **Uses Kit's actual stack** — Rails 8 + Hotwire + Tailwind, nothing foreign
+1. Sign in to your Kit account at https://app.kit.com
+2. Go to **Apps → Build → + New app**
+3. Inside the app, **Plugins tab → + New plugin**, type **Content Block**
+4. Configure:
+   - **Request URL:** `https://kit.icaro.io/api/plugin/render`
+   - **Settings JSON:** contents of `public/plugin-settings.json`
+5. Test in your own Kit account (plugin defaults to inactive — only the developer sees it)
+6. Submit for App Store review when ready
 
 ## License
 

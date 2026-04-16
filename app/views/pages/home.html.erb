@@ -18,9 +18,9 @@
     </h1>
 
     <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
-      A content block plugin for Kit's email editor. Paste a YouTube URL, pick a tone,
-      and get an AI-generated summary block with thumbnail, key takeaways, and a CTA button.
-      Ready to drop into your next email.
+      A content block plugin for Kit's email editor. Paste a YouTube URL and get an
+      AI-generated summary block back: thumbnail, key takeaways, CTA button.
+      Ready to drop into your next email. No extra config.
     </p>
 
     <div class="flex items-center justify-center gap-4">
@@ -53,9 +53,10 @@
         <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-indigo-100 flex items-center justify-center">
           <span class="text-indigo-600 font-bold">2</span>
         </div>
-        <h3 class="font-semibold text-lg mb-2">Pick your style</h3>
+        <h3 class="font-semibold text-lg mb-2">AI watches the video</h3>
         <p class="text-gray-600 text-sm">
-          Choose a tone (casual, professional, storytelling) and format (takeaways, teaser, or summary).
+          Gemini ingests the video directly via its file API. No transcript scraping, no
+          captions required, works on any public YouTube video.
         </p>
       </div>
 
@@ -65,7 +66,8 @@
         </div>
         <h3 class="font-semibold text-lg mb-2">Get your email block</h3>
         <p class="text-gray-600 text-sm">
-          AI generates a polished email section with thumbnail, content, and CTA. Inline-styled and email-client safe.
+          A polished email section appears in Kit's editor: thumbnail, 3 key takeaways,
+          and a CTA button. Inline-styled and email-client safe.
         </p>
       </div>
     </div>
@@ -92,24 +94,46 @@
 
       <div class="bg-white rounded-xl border border-gray-200 p-6">
         <h3 class="font-semibold text-sm text-gray-500 uppercase tracking-wide mb-3">Settings UI</h3>
-        <div class="space-y-2 text-sm text-gray-600">
+        <p class="text-sm text-gray-600 mb-3">
+          One field. That's it.
+        </p>
+        <div class="text-sm text-gray-600">
           <div class="flex items-center gap-2">
             <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
-            <span><strong>text</strong> input for YouTube URL</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
-            <span><strong>radioGroup</strong> for tone selection</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
-            <span><strong>radioGroup</strong> for format selection</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="inline-block w-2 h-2 rounded-full bg-indigo-400"></span>
-            <span><strong>text</strong> input for CTA button text</span>
+            <span><strong>text</strong> input for the YouTube URL</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About this project -->
+  <div class="py-16 border-t border-gray-200">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-2xl font-bold text-center mb-4">About this project</h2>
+
+      <div class="text-gray-600 space-y-4 text-base leading-relaxed">
+        <p>
+          I built this as part of my application for the
+          <strong>Senior Software Engineer, Creator Growth and Monetization</strong>
+          role at Kit (on the Network Squad).
+        </p>
+
+        <p>
+          It's also a working example of how I use AI for prototyping and learning new
+          platforms. I used <strong>Claude Code</strong> to research Kit's developer ecosystem,
+          design the architecture, and build, debug, deploy, and harden the entire app —
+          frontend, backend, custom domain, rate limiting, CORS, the whole stack — in a
+          single focused session.
+        </p>
+
+        <p>
+          The Smart Video Block solves a real workflow for Kit creators (turn YouTube
+          videos into newsletter blocks), but the bigger point is: this is how I get up
+          to speed on an unfamiliar platform fast and ship working software end-to-end.
+          Along the way I found and reported real bugs in Kit's plugin API too. That's
+          part of the story.
+        </p>
       </div>
     </div>
   </div>
@@ -130,6 +154,7 @@
   <!-- Footer -->
   <footer class="py-10 border-t border-gray-200 text-center text-sm text-gray-500">
     Built by <a href="https://icaro.io" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">Icaro Harry</a>
-    as a Kit App Store plugin prototype.
+    with <a href="https://claude.com/claude-code" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">Claude Code</a>
+    · <a href="https://github.com/icaroharry/kit-smart-video-block" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">Source on GitHub</a>
   </footer>
 </div>
