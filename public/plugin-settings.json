@@ -5,23 +5,5 @@
     "label": "YouTube URL",
     "required": true,
     "placeholder": "https://youtube.com/watch?v=..."
-  },
-  {
-    "type": "text",
-    "name": "tone",
-    "label": "Tone",
-    "help": "casual, professional, or storytelling"
-  },
-  {
-    "type": "text",
-    "name": "format",
-    "label": "Format",
-    "help": "takeaways, teaser, or summary"
-  },
-  {
-    "type": "text",
-    "name": "cta_text",
-    "label": "Button Text",
-    "help": "Call-to-action button text"
   }
 ]

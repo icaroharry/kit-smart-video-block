@@ -1,9 +1,6 @@
 class DemoController < ApplicationController
   def generate
     youtube_url = params[:youtube_url]
-    tone = params[:tone] || "casual"
-    format_type = params[:format] || "takeaways"
-    cta_text = params[:cta_text].presence || "Watch the full video"
 
     if youtube_url.blank?
       return render turbo_stream: turbo_stream.replace(
@@ -13,12 +10,7 @@ class DemoController < ApplicationController
       )
     end
 
-    result = VideoSummaryService.call(
-      youtube_url: youtube_url,
-      tone: tone,
-      format: format_type,
-      cta_text: cta_text
-    )
+    result = VideoSummaryService.call(youtube_url: youtube_url)
 
     render turbo_stream: turbo_stream.replace(
       "email-preview",
