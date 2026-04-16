@@ -10,20 +10,18 @@
     "type": "text",
     "name": "tone",
     "label": "Tone",
-    "default": "casual",
     "help": "casual, professional, or storytelling"
   },
   {
     "type": "text",
     "name": "format",
     "label": "Format",
-    "default": "takeaways",
     "help": "takeaways, teaser, or summary"
   },
   {
     "type": "text",
     "name": "cta_text",
     "label": "Button Text",
-    "default": "Watch the full video"
+    "help": "Call-to-action button text"
   }
 ]
