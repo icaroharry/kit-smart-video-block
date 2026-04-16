@@ -14,11 +14,13 @@ class VideoSummaryService
     video_id = YouTube::UrlParser.extract_video_id(@youtube_url)
     raise "Invalid YouTube URL" unless video_id
 
+    # Canonicalize URL so Gemini always sees the watch URL format
+    canonical_url = "https://www.youtube.com/watch?v=#{video_id}"
+
     metadata = YouTube::MetadataService.call(video_id)
-    transcript = YouTube::TranscriptService.call(video_id)
 
     content = GeminiService.call(
-      transcript: transcript,
+      youtube_url: canonical_url,
       tone: @tone,
       format: @format,
       title: metadata[:title]
