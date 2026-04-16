@@ -3,8 +3,8 @@ module Api
     skip_forgery_protection
 
     # Rate limit: 1 request per 10 seconds per IP.
-    # Protects against abuse if the public endpoint is discovered.
-    rate_limit to: 1, within: 10.seconds, with: -> { render_rate_limit }
+    # Uses client_ip (CF-Connecting-IP / X-Forwarded-For) to see past Railway's proxies.
+    rate_limit to: 1, within: 10.seconds, by: -> { client_ip }, with: -> { render_rate_limit }
 
     def render_block
       settings = params[:settings] || {}

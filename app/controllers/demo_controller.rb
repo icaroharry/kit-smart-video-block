@@ -1,6 +1,6 @@
 class DemoController < ApplicationController
-  # Rate limit: 1 request per 10 seconds per IP.
-  rate_limit to: 1, within: 10.seconds, with: -> { render_rate_limit }
+  # Rate limit: 1 request per 10 seconds per IP (uses client_ip to see past proxies).
+  rate_limit to: 1, within: 10.seconds, by: -> { client_ip }, with: -> { render_rate_limit }
 
   def generate
     youtube_url = params[:youtube_url]
