@@ -2,37 +2,28 @@
   {
     "type": "text",
     "name": "youtube_url",
-    "label": "YouTube Video URL",
+    "label": "YouTube URL",
     "required": true,
-    "help": "Paste a YouTube video URL to generate a summary block"
+    "placeholder": "https://youtube.com/watch?v=..."
   },
   {
-    "type": "radioGroup",
+    "type": "text",
     "name": "tone",
     "label": "Tone",
     "default": "casual",
-    "options": [
-      { "label": "Casual", "value": "casual" },
-      { "label": "Professional", "value": "professional" },
-      { "label": "Storytelling", "value": "storytelling" }
-    ]
+    "help": "casual, professional, or storytelling"
   },
   {
-    "type": "radioGroup",
+    "type": "text",
     "name": "format",
     "label": "Format",
     "default": "takeaways",
-    "options": [
-      { "label": "3 Key Takeaways", "value": "takeaways" },
-      { "label": "Teaser Hook", "value": "teaser" },
-      { "label": "Full Summary", "value": "summary" }
-    ]
+    "help": "takeaways, teaser, or summary"
   },
   {
     "type": "text",
     "name": "cta_text",
     "label": "Button Text",
-    "default": "Watch the full video",
-    "help": "Text for the call-to-action button"
+    "default": "Watch the full video"
   }
 ]
