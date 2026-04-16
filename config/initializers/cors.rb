@@ -8,7 +8,8 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       "https://kit.com",
       "https://creatornetwork.kit.com",
       /\Ahttps:\/\/.*\.up\.railway\.app\z/,
-      /\Ahttp:\/\/localhost(:\d+)?\z/ # for local development
+      /\Ahttps:\/\/.*\.icaro\.io\z/,         # custom domain (kit.icaro.io and any future)
+      /\Ahttp:\/\/localhost(:\d+)?\z/         # for local development
     )
 
     resource "*",
