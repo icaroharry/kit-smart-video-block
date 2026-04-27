@@ -25,13 +25,8 @@ class EmailHtmlBuilder
 
   def thumbnail_section
     <<~HTML
-      <a href="#{@metadata[:video_url]}" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; position: relative;">
-        <div style="position: relative; border-radius: 8px; overflow: hidden;">
-          <img src="#{@metadata[:thumbnail_url]}" alt="#{escape(@metadata[:title])}" style="width: 100%; height: auto; display: block;" />
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: rgba(0,0,0,0.7); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-            <div style="width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 18px; border-color: transparent transparent transparent #ffffff; margin-left: 4px;"></div>
-          </div>
-        </div>
+      <a href="#{@metadata[:video_url]}" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none;">
+        <img src="#{@metadata[:thumbnail_url]}" alt="#{escape(@metadata[:title])}" style="width: 100%; height: auto; display: block; border-radius: 8px;" />
       </a>
     HTML
   end
