@@ -78,7 +78,8 @@ class GeminiService
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 1024,
-        mediaResolution: "MEDIA_RESOLUTION_LOW"
+        mediaResolution: "MEDIA_RESOLUTION_LOW",
+        thinkingConfig: { thinkingBudget: 0 }
       }
     }
   end
