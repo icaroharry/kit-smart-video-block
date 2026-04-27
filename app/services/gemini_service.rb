@@ -19,12 +19,18 @@ class GeminiService
     last_error = nil
 
     MODELS.each do |model|
-      response = HTTParty.post(
-        "#{BASE_URL}/#{model}:generateContent?key=#{api_key}",
-        headers: { "Content-Type" => "application/json" },
-        body: build_body.to_json,
-        timeout: 60
-      )
+      begin
+        response = HTTParty.post(
+          "#{BASE_URL}/#{model}:generateContent?key=#{api_key}",
+          headers: { "Content-Type" => "application/json" },
+          body: build_body.to_json,
+          timeout: 180
+        )
+      rescue Net::ReadTimeout, Net::OpenTimeout => e
+        last_error = "#{model}: timeout (#{e.class.name})"
+        Rails.logger.warn("GeminiService: #{last_error}")
+        next
+      end
 
       if response.success?
         data = response.parsed_response
@@ -41,6 +47,10 @@ class GeminiService
 
     if last_error&.include?("input token count exceeds")
       raise "Video too long to process. Please try a shorter video."
+    end
+
+    if last_error&.include?("timeout")
+      raise "Video took too long to process. Please try again or use a shorter video."
     end
 
     raise "Gemini API unavailable: #{last_error}"
