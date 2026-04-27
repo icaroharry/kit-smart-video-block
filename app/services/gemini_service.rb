@@ -1,6 +1,8 @@
 class GeminiService
   BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models".freeze
   MODELS = %w[gemini-2.5-flash gemini-2.5-flash-lite].freeze
+  # Clip ingestion to first 5 minutes to keep token cost predictable.
+  VIDEO_CLIP_END_OFFSET = "300s".freeze
 
   def self.call(youtube_url:, tone:, format:, title: nil)
     new(youtube_url:, tone:, format:, title:).call
@@ -37,6 +39,10 @@ class GeminiService
       Rails.logger.warn("GeminiService: #{last_error}")
     end
 
+    if last_error&.include?("input token count exceeds")
+      raise "Video too long to process. Please try a shorter video."
+    end
+
     raise "Gemini API unavailable: #{last_error}"
   end
 
@@ -51,14 +57,18 @@ class GeminiService
       contents: [
         {
           parts: [
-            { fileData: { fileUri: @youtube_url } },
+            {
+              fileData: { fileUri: @youtube_url },
+              videoMetadata: { endOffset: VIDEO_CLIP_END_OFFSET }
+            },
             { text: build_prompt }
           ]
         }
       ],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1024
+        maxOutputTokens: 1024,
+        mediaResolution: "MEDIA_RESOLUTION_LOW"
       }
     }
   end
